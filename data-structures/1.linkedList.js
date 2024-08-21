@@ -1,45 +1,72 @@
-export class LinkedList {
-    #_head
-    #_tail
+// linked list is a linear collection of data elements whose order is not given by their physical placement in memory. 
+// Instead, each element points to the next. 
+// It is a data structure consisting of a collection of nodes which together represent a sequence
 
-    constructor (head = null) {
-        this.#_head = head
-        this._tail = null
+class LinkedList {
+    #head
+    #tail
+
+    constructor (headValue = null) {
+        // if LL has 1 node, then head is tail and tail is head
+        const node = headValue ? {value: headValue, next: null} : null
+        this.#head = node
+        this.#tail = node
     }
 
     getHead() {
-        return this.#_head
+        return this.#head
     }
 
     getTail() {
-        return this.#_tail
+        return this.#tail
     }
 
-    addToTail(dataset) {
-        const node = {value: dataset, next: null}
-        if (this.#_tail) this.#_tail.next = node
-        if (!this.#_head) this.#_head = node
-        this._tail = node
+    addToTail(value) {
+        const node = {value, next: null}
+
+        // adding to the end if this "end" exists
+        if (this.#tail) this.#tail.next = node
+
+        // if HEAD initial value is null, then creating node with rule: head is tail and tail is head
+        if (!this.#head) this.#head = node
+        this.#tail = node
     }
 
-    addToHead(dataset) {
-        const node = {value: dataset, next: this.#_head}
-        this.#_head = node
-        if (!this.#_tail) this._tail = node
+    addToHead(value) {
+        const node = {value, next: this.#head}
+
+        // if TAIL initial value is null, then creating node with rule: head is tail and tail is head
+        if (!this.#tail) this.#tail = node
+        this.#head = node
     }
 
-    /**
-     * 
-     * @param {Function} callback 
-     * @returns 
-     */
-    toArray(callback = undefined){
+    map(callback) {
 
-        let array = []
-        if (!this.#_head) return array
-
-        let currentNode = this.#_head
+        let currentNode = this.#head
         let isEnded = false
+
+        while (!isEnded) {
+            if (!currentNode.next) {
+                currentNode.value = callback(currentNode.value)
+                isEnded = true
+                continue
+            }
+            currentNode.value = callback(currentNode.value)
+            currentNode = currentNode.next
+        }
+
+        return this.#head
+    }
+
+
+
+    toArray() {
+        let array = []
+        if (!this.#head) return array
+
+        let currentNode = this.#head
+        let isEnded = false
+        // iterating through nodes via ".next" while next node is not undefined and pushing values to array
         while (!isEnded) {
             if (!currentNode.next) {
                 array.push(currentNode.value)
@@ -50,16 +77,15 @@ export class LinkedList {
             currentNode = currentNode.next
         }
 
-        if (callback) callback(array)
         return array
     }
 
-    replace(oldValue, newValue, instancesCount = undefined, callback = undefined ) {
-        if (this.#_head == null) return 0
+    replace(oldValue, newValue, instancesCount = undefined) {
+        if (this.#head == null) return 0
         if (!instancesCount) instancesCount = 1
         let completedInstances = 0
 
-        let currentNode = this.#_head
+        let currentNode = this.#head
         let isEnded = false
 
         // O(n) alg. difficulty
@@ -67,7 +93,6 @@ export class LinkedList {
             if (completedInstances === instancesCount) return completedInstances
             if (currentNode.value === oldValue) {
                 currentNode.value = newValue
-                if (callback) callback(currentNode)
                 completedInstances++
             }
             if (!currentNode.next) {
@@ -80,20 +105,19 @@ export class LinkedList {
         return completedInstances
     }
     
-    remove(value, instancesCount = undefined, callback = undefined ) {
-        if (this.#_head == null) return 0
+    remove(value, instancesCount = undefined) {
+        if (this.#head == null) return 0
         if (!instancesCount) instancesCount = 1
 
         let completedInstances = 0
 
-        let currentNode = this.#_head
+        let currentNode = this.#head
         let isEnded = false
 
         while (!isEnded) {
             if (completedInstances === instancesCount) return completedInstances
             if (currentNode.next && currentNode.next.value === value) {
                 currentNode.next = currentNode.next.next
-                if (callback) callback(currentNode)
                 completedInstances++
                 continue
             }
@@ -103,7 +127,7 @@ export class LinkedList {
             }
             currentNode = currentNode.next
         }
-        if (this.#_tail?.value === value) this._tail = currentNode
+        if (this.#tail?.value === value) this.#tail = currentNode
         
         return completedInstances
     }
@@ -112,3 +136,18 @@ export class LinkedList {
 
 
 
+const ll = new LinkedList(1)
+
+ll.addToHead(2)
+ll.addToTail(3)
+ll.addToHead(9)
+ll.addToTail(4)
+
+
+console.log(ll.toArray())
+// [ 9, 2, 1, 3, 4 ]
+
+ll.map(v => v*v)
+
+console.log(ll.toArray())
+// [ 81, 4, 1, 9, 16 ]
