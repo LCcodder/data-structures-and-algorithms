@@ -13,11 +13,11 @@ class LinkedList {
         this.#tail = node
     }
 
-    getHead() {
+    get head() {
         return this.#head
     }
 
-    getTail() {
+    get tail() {
         return this.#tail
     }
 
@@ -141,8 +141,16 @@ class LinkedList {
 
 const ll = new LinkedList(1)
 
+
 ll.addToHead(2)
 ll.addToTail(3)
+
+console.log(ll.head)
+// { value: 2, next: { value: 1, next: { value: 3, next: null } } }
+
+console.log(ll.tail)
+// { value: 3, next: null }
+
 ll.addToHead(9)
 ll.addToTail(4)
 ll.addToTail(4)
