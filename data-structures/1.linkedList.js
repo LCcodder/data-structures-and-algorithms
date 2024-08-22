@@ -66,7 +66,7 @@ class LinkedList {
 
         let currentNode = this.#head
         let isEnded = false
-        // iterating through nodes via ".next" while next node is not undefined and pushing values to array
+
         while (!isEnded) {
             if (!currentNode.next) {
                 array.push(currentNode.value)
@@ -82,13 +82,14 @@ class LinkedList {
 
     replace(oldValue, newValue, instancesCount = undefined) {
         if (this.#head == null) return 0
-        if (!instancesCount) instancesCount = 1
+
+        // if instances count is undefined, code will replace values until list ends
+        if (!instancesCount) instancesCount = -1
         let completedInstances = 0
 
         let currentNode = this.#head
         let isEnded = false
 
-        // O(n) alg. difficulty
         while (!isEnded) {
             if (completedInstances === instancesCount) return completedInstances
             if (currentNode.value === oldValue) {
@@ -107,7 +108,9 @@ class LinkedList {
     
     remove(value, instancesCount = undefined) {
         if (this.#head == null) return 0
-        if (!instancesCount) instancesCount = 1
+
+        // if instances count is undefined, code will remove value until list ends
+        if (!instancesCount) instancesCount = -1
 
         let completedInstances = 0
 
@@ -142,12 +145,20 @@ ll.addToHead(2)
 ll.addToTail(3)
 ll.addToHead(9)
 ll.addToTail(4)
-
+ll.addToTail(4)
 
 console.log(ll.toArray())
-// [ 9, 2, 1, 3, 4 ]
+// [ 9, 2, 1, 3, 4, 4 ]
 
 ll.map(v => v*v)
-
 console.log(ll.toArray())
-// [ 81, 4, 1, 9, 16 ]
+// [ 81, 4, 1, 9, 16, 16 ]
+
+
+ll.remove(16)
+console.log(ll.toArray())
+// [ 81, 4, 1, 9 ]
+
+ll.replace(4, 0)
+console.log(ll.toArray())
+// [ 81, 0, 1, 9 ]
