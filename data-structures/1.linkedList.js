@@ -40,44 +40,23 @@ class LinkedList {
         this.#head = node
     }
 
-    map(callback) {
+    *iterate(node = this.#head) {
+        if (!node.next) return yield node
+        
+        yield node
+        yield* this.iterate(node.next)
+    }
 
-        let currentNode = this.#head
-        let isEnded = false
-
-        while (!isEnded) {
-            if (!currentNode.next) {
-                currentNode.value = callback(currentNode.value)
-                isEnded = true
-                continue
-            }
-            currentNode.value = callback(currentNode.value)
-            currentNode = currentNode.next
-        }
-
+    mapValue(callback) {
+        for (const node of this.iterate()) 
+            node.value = callback(node.value)
+        
         return this.#head
     }
 
-
-
     toArray() {
-        let array = []
-        if (!this.#head) return array
-
-        let currentNode = this.#head
-        let isEnded = false
-
-        while (!isEnded) {
-            if (!currentNode.next) {
-                array.push(currentNode.value)
-                isEnded = true
-                continue
-            }
-            array.push(currentNode.value)
-            currentNode = currentNode.next
-        }
-
-        return array
+        if (!this.#head) return []
+        return [...this.iterate()].map(n => n.value)
     }
 
     replace(oldValue, newValue, instancesCount = undefined) {
@@ -87,20 +66,13 @@ class LinkedList {
         if (!instancesCount) instancesCount = -1
         let completedInstances = 0
 
-        let currentNode = this.#head
-        let isEnded = false
-
-        while (!isEnded) {
+        for (const node of this.iterate()) {
             if (completedInstances === instancesCount) return completedInstances
-            if (currentNode.value === oldValue) {
-                currentNode.value = newValue
+            
+            if (node.value === oldValue) {
+                node.value = newValue
                 completedInstances++
             }
-            if (!currentNode.next) {
-                isEnded = true
-                continue
-            }
-            currentNode = currentNode.next
         }
 
         return completedInstances
@@ -113,6 +85,18 @@ class LinkedList {
         if (!instancesCount) instancesCount = -1
 
         let completedInstances = 0
+        // let lastNode = null
+        // for (const node of this.iterate()) {
+        //     if (completedInstances === instancesCount) return completedInstances
+            
+        //     if (node.next && node.next.value === value) {
+        //         node.next = node.next.next
+        //         completedInstances++
+        //     }
+        //     lastNode = node
+            
+        // }
+        // if (this.#tail?.value === value) this.#tail = lastNode
 
         let currentNode = this.#head
         let isEnded = false
@@ -155,18 +139,25 @@ ll.addToHead(9)
 ll.addToTail(4)
 ll.addToTail(4)
 
+
+
 console.log(ll.toArray())
 // [ 9, 2, 1, 3, 4, 4 ]
 
-ll.map(v => v*v)
+ll.mapValue(v => v*v)
 console.log(ll.toArray())
 // [ 81, 4, 1, 9, 16, 16 ]
 
-
-ll.remove(16)
+ll.remove(16, 3)
 console.log(ll.toArray())
 // [ 81, 4, 1, 9 ]
 
 ll.replace(4, 0)
 console.log(ll.toArray())
 // [ 81, 0, 1, 9 ]
+
+for (const node of ll.iterate()) {
+    console.log(node)
+}
+
+console.log(ll.tail)
