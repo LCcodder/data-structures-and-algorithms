@@ -58,9 +58,12 @@ class BinaryTree {
     ) {
         for (let node of this.preOrderTraversal()) {
             if (node.key === parentNodeKey) {
+                // checking if node has 2 children
                 const canInsertLeft = left && node.left === null;
                 const canInsertRight = right && node.right === null;
                 if (!canInsertLeft && !canInsertRight) return false;
+
+                // inserting left or right depenging of children
                 if (canInsertLeft) {
                     node.left = new BinaryTreeNode(key, value, node);
                     return true;
@@ -76,6 +79,7 @@ class BinaryTree {
   
     remove(key) {
         for (const node of this.preOrderTraversal()) {
+            // checking children keys for deleting (also removes al children below the node)
             if (node.left.key === key) {
                 node.left = null;
                 return true;
@@ -105,10 +109,15 @@ tree.insert(11, 112, 'DC')
 tree.insert(1, 12, 'BC');
 tree.insert(12, 121, 'BD');
 
-console.log(tree.find(12).left)
+console.log(tree.find(12).left.value)
+// BD
 
 console.log([...tree.preOrderTraversal()].map(n => n.value))
+// [ 'AB', 'AC', 'AD', 'DC', 'BC', 'BD' ]
+
 
 console.log([...tree.postOrderTraversal()].map(n => n.value))
+// [ 'AD', 'DC', 'AC', 'BD', 'BC', 'AB' ]
 
 console.log([...tree.inOrderTraversal()].map(n => n.value))
+// [ 'AD', 'AC', 'DC', 'AB', 'BD', 'BC' ]
