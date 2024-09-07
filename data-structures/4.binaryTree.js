@@ -77,12 +77,12 @@ class BinaryTree {
     remove(key) {
         for (const node of this.preOrderTraversal()) {
             if (node.left.key === key) {
-            node.left = null;
-            return true;
+                node.left = null;
+                return true;
             }
             if (node.right.key === key) {
-            node.right = null;
-            return true;
+                node.right = null;
+                return true;
             }
         }
         return false;
