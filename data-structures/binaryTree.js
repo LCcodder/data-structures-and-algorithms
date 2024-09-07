@@ -76,10 +76,11 @@ class BinaryTree {
         }
         return false;
     }
-  
+    
+    // also removes all children that are linked to that node
     remove(key) {
         for (const node of this.preOrderTraversal()) {
-            // checking children keys for deleting (also removes al children below the node)
+            // checking children keys for deleting 
             if (node.left.key === key) {
                 node.left = null;
                 return true;
