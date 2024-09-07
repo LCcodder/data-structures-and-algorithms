@@ -79,6 +79,18 @@ class BinarySearchTree {
         }
         return false;
     }
+
+    #getMaxDepth(node = this.root) {
+        if (node === null) return 0
+        const rightDepth = this.#getMaxDepth(node.right)
+        const leftDepth = this.#getMaxDepth(node.left)
+        
+        return Math.max(rightDepth, leftDepth) + 1
+    }
+    
+    get depth() {
+        return this.#getMaxDepth()
+    }
 }
 
 const t = new BinarySearchTree(8)
@@ -95,3 +107,6 @@ console.log(t.find(15).right.value)
 t.remove(14)
 console.log([...t.inOrderTraversal()].map(n => n.value))
 // [ 3, 4, 6, 8, 15, 21 ]
+
+console.log(t.depth)
+// 4
