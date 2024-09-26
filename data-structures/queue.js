@@ -14,6 +14,10 @@ class Queue {
         return this.#queue
     }
 
+    get isEmpty() {
+        return !Boolean(this.#queue.length)
+    }
+
     enqueue(...values) {
         for (const value of values) {
             this.#queue.push(value)
@@ -28,6 +32,8 @@ class Queue {
         return this.#queue
     }
 }
+
+module.exports = {Queue}
 
 const queue = new Queue(1)
 queue.enqueue(12, 11, 10)
